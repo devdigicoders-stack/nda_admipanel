@@ -27,9 +27,20 @@ export default function Sidebar({ activeTab, setActiveTab, admin, onLogout, isMo
   return (
     <aside className="admin-sidebar">
       {/* Brand */}
-      <div className="sidebar-brand">
-        <div className="brand-crest">
-          <ShieldCheck size={26} color="#0B0F17" />
+      <div className="sidebar-brand" style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+        <div style={{
+          background: '#ffffff',
+          padding: '4px 8px',
+          borderRadius: '6px',
+          display: 'inline-flex',
+          alignItems: 'center',
+          justifyContent: 'center'
+        }}>
+          <img
+            src="/logo.png"
+            alt="Shaurya Defence"
+            style={{ height: '36px', width: 'auto', objectFit: 'contain' }}
+          />
         </div>
         <div className="brand-text">
           <h2>SHAURYA DEFENCE</h2>

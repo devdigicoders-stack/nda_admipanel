@@ -51,17 +51,20 @@ export default function Login({ onLoginSuccess }) {
         {/* Crest */}
         <div style={{ textAlign: 'center', marginBottom: '28px' }}>
           <div style={{
-            width: '64px',
-            height: '64px',
-            background: 'linear-gradient(135deg, #ca8a04, #eab308)',
-            borderRadius: '16px',
+            background: '#ffffff',
+            padding: '12px 24px',
+            borderRadius: '12px',
             display: 'inline-flex',
             alignItems: 'center',
             justifyContent: 'center',
-            boxShadow: '0 8px 24px rgba(234, 179, 8, 0.35)',
-            marginBottom: '16px'
+            boxShadow: '0 4px 16px rgba(0, 0, 0, 0.25)',
+            marginBottom: '18px'
           }}>
-            <ShieldCheck size={36} color="#0B0F17" />
+            <img
+              src="/logo.png"
+              alt="Shaurya Defence Academy"
+              style={{ height: '70px', width: 'auto', objectFit: 'contain', display: 'block' }}
+            />
           </div>
           <h1 style={{ fontSize: '24px', fontWeight: '800', color: '#f8fafc' }}>
             Command Control Portal
