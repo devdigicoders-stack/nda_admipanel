@@ -9,7 +9,8 @@ import {
   Clock, 
   AlertTriangle,
   ArrowRight,
-  MessageSquare
+  MessageSquare,
+  Phone
 } from 'lucide-react';
 import { api } from '../api';
 
@@ -70,7 +71,7 @@ export default function Dashboard({ setActiveTab }) {
   return (
     <div>
       {/* Stat Cards */}
-      <div className="stat-grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(210px, 1fr))' }}>
+      <div className="stat-grid">
         <div className="stat-card">
           <div className="stat-icon" style={{ background: 'rgba(234, 179, 8, 0.15)', color: '#eab308' }}>
             <Users size={24} />
@@ -123,13 +124,13 @@ export default function Dashboard({ setActiveTab }) {
       </div>
 
       {/* Grid: Recent Enquiries & Notices */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1.4fr 1fr', gap: '24px' }}>
+      <div className="dashboard-content-grid">
         {/* Recent Enquiries */}
         <div className="card">
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '18px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '18px', gap: '8px', flexWrap: 'wrap' }}>
             <h3 style={{ fontSize: '17px', fontWeight: '700', color: '#f8fafc', display: 'flex', alignItems: 'center', gap: '8px' }}>
               <TrendingUp size={18} color="#eab308" />
-              <span>Recent Admission Inquiries</span>
+              <span>Recent Inquiries</span>
             </h3>
             <button
               className="btn btn-secondary btn-sm"
@@ -140,8 +141,9 @@ export default function Dashboard({ setActiveTab }) {
             </button>
           </div>
 
-          <div className="table-container">
-            <table>
+          {/* Desktop Table View */}
+          <div className="table-container desktop-only">
+            <table style={{ minWidth: '460px' }}>
               <thead>
                 <tr>
                   <th>Cadet Name</th>
@@ -162,7 +164,14 @@ export default function Dashboard({ setActiveTab }) {
                     <tr key={enq._id}>
                       <td>
                         <div style={{ fontWeight: '600', color: '#f8fafc' }}>{enq.name}</div>
-                        <div style={{ fontSize: '12px', color: '#94a3b8' }}>{enq.phone}</div>
+                        <a 
+                          href={`tel:${enq.phone}`} 
+                          style={{ fontSize: '12px', color: '#38bdf8', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '4px' }}
+                          title="Click to call"
+                        >
+                          <Phone size={11} />
+                          <span>{enq.phone}</span>
+                        </a>
                       </td>
                       <td style={{ fontSize: '13px', color: '#cbd5e1' }}>
                         {enq.courseInterested}
@@ -196,6 +205,50 @@ export default function Dashboard({ setActiveTab }) {
                 )}
               </tbody>
             </table>
+          </div>
+
+          {/* Mobile Card View (Optimized for Phone Screen) */}
+          <div className="mobile-only mobile-inquiries-list">
+            {s.recentEnquiries.length === 0 ? (
+              <div style={{ textAlign: 'center', padding: '24px', color: '#94a3b8' }}>
+                No enquiries yet. Test by submitting from the website!
+              </div>
+            ) : (
+              s.recentEnquiries.map((enq) => (
+                <div key={enq._id} className="mobile-inquiry-item">
+                  <div className="mobile-inquiry-top">
+                    <div>
+                      <div className="mobile-inquiry-name">{enq.name}</div>
+                      <a href={`tel:${enq.phone}`} className="mobile-inquiry-phone" title="Tap to call">
+                        <Phone size={12} />
+                        <span>{enq.phone}</span>
+                      </a>
+                    </div>
+                    <span className={`pill pill-${enq.status.toLowerCase()}`}>
+                      {enq.status}
+                    </span>
+                  </div>
+
+                  <div className="mobile-inquiry-course">
+                    🎯 <span>{enq.courseInterested}</span>
+                  </div>
+
+                  <div className="mobile-inquiry-bottom">
+                    <span style={{ fontSize: '11px', color: '#94a3b8' }}>Status:</span>
+                    <select
+                      value={enq.status}
+                      onChange={(e) => handleQuickStatusChange(enq._id, e.target.value)}
+                      className="mobile-status-dropdown"
+                    >
+                      <option value="Pending">Pending</option>
+                      <option value="Contacted">Contacted</option>
+                      <option value="Enrolled">Enrolled</option>
+                      <option value="Closed">Closed</option>
+                    </select>
+                  </div>
+                </div>
+              ))
+            )}
           </div>
         </div>
 
@@ -249,16 +302,7 @@ export default function Dashboard({ setActiveTab }) {
           </div>
 
           {/* Quick links banner */}
-          <div style={{
-            marginTop: '20px',
-            padding: '14px',
-            borderRadius: '8px',
-            background: 'linear-gradient(135deg, rgba(21, 128, 61, 0.15), rgba(30, 41, 59, 0.4))',
-            border: '1px solid rgba(34, 197, 94, 0.25)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between'
-          }}>
+          <div className="dashboard-quick-banner">
             <div>
               <div style={{ fontSize: '13px', fontWeight: '600', color: '#4ade80' }}>
                 Academy Quick Actions
@@ -270,6 +314,7 @@ export default function Dashboard({ setActiveTab }) {
             <button
               className="btn btn-primary btn-sm"
               onClick={() => setActiveTab('courses')}
+              style={{ flexShrink: 0 }}
             >
               Add Course
             </button>

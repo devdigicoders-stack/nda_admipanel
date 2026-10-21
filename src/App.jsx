@@ -17,6 +17,7 @@ export default function App() {
   const [checkingAuth, setCheckingAuth] = useState(true);
   const [isMongoConnected, setIsMongoConnected] = useState(false);
   const [refreshKey, setRefreshKey] = useState(0);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   useEffect(() => {
     const token = api.getToken();
@@ -51,11 +52,17 @@ export default function App() {
   const handleLogout = () => {
     api.logout();
     setAdmin(null);
+    setSidebarOpen(false);
   };
 
   const handleManualRefresh = () => {
     setRefreshKey(prev => prev + 1);
     checkHealth();
+  };
+
+  const handleSelectTab = (tab) => {
+    setActiveTab(tab);
+    setSidebarOpen(false);
   };
 
   if (checkingAuth) {
@@ -84,10 +91,12 @@ export default function App() {
     <div className="admin-layout">
       <Sidebar
         activeTab={activeTab}
-        setActiveTab={setActiveTab}
+        setActiveTab={handleSelectTab}
         admin={admin}
         onLogout={handleLogout}
         isMongoConnected={isMongoConnected}
+        isOpen={sidebarOpen}
+        onClose={() => setSidebarOpen(false)}
       />
 
       <div className="admin-main">
@@ -95,10 +104,11 @@ export default function App() {
           title={titles[activeTab]?.title || 'Command Center'}
           subtitle={titles[activeTab]?.subtitle}
           onRefresh={handleManualRefresh}
+          onToggleSidebar={() => setSidebarOpen(prev => !prev)}
         />
 
         <main className="admin-content" key={refreshKey}>
-          {activeTab === 'dashboard' && <Dashboard setActiveTab={setActiveTab} />}
+          {activeTab === 'dashboard' && <Dashboard setActiveTab={handleSelectTab} />}
           {activeTab === 'courses' && <Courses />}
           {activeTab === 'enquiries' && <Enquiries />}
           {activeTab === 'contacts' && <Contacts />}

@@ -84,7 +84,7 @@ export default function Gallery() {
             Add obstacle ground photos, mock interview setups, and recommended cadets
           </p>
         </div>
-        <button className="btn btn-primary" onClick={() => setModalOpen(true)}>
+        <button className="btn btn-primary btn-sm" onClick={() => setModalOpen(true)}>
           <Plus size={16} />
           <span>Upload New Photo</span>
         </button>
@@ -106,7 +106,7 @@ export default function Gallery() {
       {loading ? (
         <div style={{ textAlign: 'center', padding: '40px', color: '#94a3b8' }}>Loading gallery...</div>
       ) : (
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '20px' }}>
+        <div className="gallery-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))', gap: '16px' }}>
           {items.map((item) => (
             <div key={item._id} className="card" style={{ padding: '12px' }}>
               <div style={{ position: 'relative', height: '180px', borderRadius: '8px', overflow: 'hidden', marginBottom: '10px' }}>

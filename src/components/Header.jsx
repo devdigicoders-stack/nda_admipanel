@@ -1,26 +1,45 @@
 import React from 'react';
-import { ExternalLink, RefreshCw } from 'lucide-react';
+import { ExternalLink, RefreshCw, Menu } from 'lucide-react';
 
-export default function Header({ title, subtitle, onRefresh, isRefreshing }) {
+export default function Header({ 
+  title, 
+  subtitle, 
+  onRefresh, 
+  isRefreshing, 
+  onToggleSidebar 
+}) {
   return (
     <header className="admin-header">
-      <div>
-        <h1 style={{ fontSize: '20px', fontWeight: '700', color: '#f8fafc' }}>{title}</h1>
-        {subtitle && (
-          <p style={{ fontSize: '13px', color: '#94a3b8', marginTop: '2px' }}>{subtitle}</p>
-        )}
+      <div className="header-left-group">
+        <button
+          type="button"
+          className="mobile-menu-btn"
+          onClick={onToggleSidebar}
+          title="Open Menu"
+          aria-label="Open Navigation Drawer"
+        >
+          <Menu size={20} />
+        </button>
+
+        <div className="header-titles">
+          <h1 className="header-title">{title}</h1>
+          {subtitle && (
+            <p className="header-subtitle">{subtitle}</p>
+          )}
+        </div>
       </div>
 
-      <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+      <div className="header-actions-group">
         {onRefresh && (
           <button
-            className="btn btn-secondary btn-sm"
+            type="button"
+            className="btn btn-secondary btn-sm header-action-btn"
             onClick={onRefresh}
             disabled={isRefreshing}
             title="Refresh Data"
           >
             <RefreshCw size={14} className={isRefreshing ? 'animate-spin' : ''} />
-            <span>Refresh</span>
+            <span className="btn-label">Refresh</span>
           </button>
         )}
 
@@ -28,11 +47,12 @@ export default function Header({ title, subtitle, onRefresh, isRefreshing }) {
           href="http://localhost:3000"
           target="_blank"
           rel="noreferrer"
-          className="btn btn-primary btn-sm"
+          className="btn btn-primary btn-sm header-action-btn"
           style={{ textDecoration: 'none' }}
+          title="Open Live Public Website"
         >
           <ExternalLink size={14} />
-          <span>View Website</span>
+          <span className="btn-label">Live Site</span>
         </a>
       </div>
     </header>

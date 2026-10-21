@@ -115,12 +115,12 @@ export default function Courses() {
 
   return (
     <div>
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '24px' }}>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '24px', flexWrap: 'wrap', gap: '14px' }}>
         <div>
-          <h2 style={{ fontSize: '18px', fontWeight: '700', color: '#f8fafc' }}>NDA & SSB Course Catalog</h2>
+          <h2 style={{ fontSize: '18px', fontWeight: '700', color: '#f8fafc' }}>NDA &amp; SSB Course Catalog</h2>
           <p style={{ fontSize: '13px', color: '#94a3b8' }}>Manage course fees, durations, batch schedules and syllabus details</p>
         </div>
-        <button className="btn btn-primary" onClick={openAddModal}>
+        <button className="btn btn-primary btn-sm" onClick={openAddModal}>
           <Plus size={16} />
           <span>Add New Course</span>
         </button>
@@ -129,7 +129,7 @@ export default function Courses() {
       {loading ? (
         <div style={{ color: '#94a3b8', textAlign: 'center', padding: '40px' }}>Loading courses...</div>
       ) : (
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(340px, 1fr))', gap: '20px' }}>
+        <div className="courses-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '20px' }}>
           {courses.map((c) => (
             <div key={c._id} className="card" style={{ display: 'flex', flexDirection: 'column' }}>
               <div style={{ position: 'relative', height: '160px', borderRadius: '8px', overflow: 'hidden', marginBottom: '14px' }}>

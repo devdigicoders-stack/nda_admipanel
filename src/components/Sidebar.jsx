@@ -3,17 +3,25 @@ import {
   LayoutDashboard, 
   GraduationCap, 
   Users, 
-  MessageSquare,
+  MessageSquare, 
   Bell, 
   BookOpen, 
   Image as ImageIcon, 
   LogOut, 
-  ShieldCheck, 
   ExternalLink,
-  Database
+  Database,
+  X
 } from 'lucide-react';
 
-export default function Sidebar({ activeTab, setActiveTab, admin, onLogout, isMongoConnected }) {
+export default function Sidebar({ 
+  activeTab, 
+  setActiveTab, 
+  admin, 
+  onLogout, 
+  isMongoConnected, 
+  isOpen, 
+  onClose 
+}) {
   const menuItems = [
     { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
     { id: 'courses', label: 'NDA & SSB Courses', icon: GraduationCap },
@@ -25,97 +33,130 @@ export default function Sidebar({ activeTab, setActiveTab, admin, onLogout, isMo
   ];
 
   return (
-    <aside className="admin-sidebar">
-      {/* Brand */}
-      <div className="sidebar-brand" style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-        <div style={{
-          background: '#ffffff',
-          padding: '4px 8px',
-          borderRadius: '6px',
-          display: 'inline-flex',
-          alignItems: 'center',
-          justifyContent: 'center'
-        }}>
-          <img
-            src="/logo.png"
-            alt="Shaurya Defence"
-            style={{ height: '36px', width: 'auto', objectFit: 'contain' }}
-          />
-        </div>
-        <div className="brand-text">
-          <h2>SHAURYA DEFENCE</h2>
-          <span>Admin Command</span>
-        </div>
-      </div>
+    <>
+      {/* Mobile Backdrop Overlay */}
+      {isOpen && (
+        <div 
+          className="sidebar-backdrop" 
+          onClick={onClose} 
+          aria-hidden="true" 
+        />
+      )}
 
-      {/* Database status banner */}
-      <div style={{ padding: '12px 18px', borderBottom: '1px solid var(--border-color)', background: 'rgba(0,0,0,0.15)' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '11px', color: '#94a3b8' }}>
-          <Database size={13} color={isMongoConnected ? '#22c55e' : '#eab308'} />
-          <span>DB: <strong style={{ color: isMongoConnected ? '#4ade80' : '#facc15' }}>{isMongoConnected ? 'MongoDB (Live)' : 'Memory & Seed Mode'}</strong></span>
-        </div>
-      </div>
-
-      {/* Navigation */}
-      <nav className="sidebar-nav">
-        {menuItems.map((item) => {
-          const Icon = item.icon;
-          const isActive = activeTab === item.id;
-          return (
-            <button
-              key={item.id}
-              className={`nav-item ${isActive ? 'active' : ''}`}
-              onClick={() => setActiveTab(item.id)}
-            >
-              <Icon size={18} />
-              <span>{item.label}</span>
-            </button>
-          );
-        })}
-
-        <div style={{ margin: '16px 0', borderTop: '1px solid var(--border-color)' }}></div>
-
-        {/* Link to public website */}
-        <a
-          href="http://localhost:3000"
-          target="_blank"
-          rel="noreferrer"
-          className="nav-item"
-          style={{ textDecoration: 'none', color: '#38bdf8' }}
-        >
-          <ExternalLink size={18} />
-          <span>Open Live Website</span>
-        </a>
-      </nav>
-
-      {/* Profile & Logout */}
-      <div className="sidebar-footer">
-        <div className="admin-profile-pill">
-          <div className="profile-avatar">
-            {admin?.name ? admin.name.charAt(0).toUpperCase() : 'A'}
-          </div>
-          <div className="profile-info">
-            <div className="profile-name">{admin?.name || 'Commandant Admin'}</div>
-            <div className="profile-role">{admin?.email || 'admin@ndassb.academy'}</div>
-          </div>
-          <button
-            onClick={onLogout}
-            title="Sign Out"
-            style={{
-              background: 'transparent',
-              border: 'none',
-              color: '#ef4444',
-              cursor: 'pointer',
-              padding: '6px',
+      <aside className={`admin-sidebar ${isOpen ? 'open' : ''}`}>
+        {/* Brand Header */}
+        <div className="sidebar-brand">
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flex: 1, minWidth: 0 }}>
+            <div style={{
+              background: '#ffffff',
+              padding: '4px 8px',
               borderRadius: '6px',
-              display: 'flex',
-              alignItems: 'center'
-            }}
+              display: 'inline-flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              flexShrink: 0
+            }}>
+              <img
+                src="/logo.png"
+                alt="Shaurya Defence"
+                style={{ height: '36px', width: 'auto', objectFit: 'contain' }}
+              />
+            </div>
+            <div className="brand-text">
+              <h2>SHAURYA DEFENCE</h2>
+              <span>Admin Command</span>
+            </div>
+          </div>
+
+          {/* Close button for mobile screens */}
+          <button 
+            type="button"
+            className="sidebar-close-btn" 
+            onClick={onClose}
+            aria-label="Close navigation"
           >
-            <LogOut size={18} />
+            <X size={20} />
           </button>
         </div>
-      </div>
-    </aside>
+
+        {/* Database status banner */}
+        <div style={{ padding: '12px 18px', borderBottom: '1px solid var(--border-color)', background: 'rgba(0,0,0,0.15)' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '11px', color: '#94a3b8' }}>
+            <Database size={13} color={isMongoConnected ? '#22c55e' : '#eab308'} />
+            <span>DB: <strong style={{ color: isMongoConnected ? '#4ade80' : '#facc15' }}>{isMongoConnected ? 'MongoDB (Live)' : 'Memory & Seed Mode'}</strong></span>
+          </div>
+        </div>
+
+        {/* Navigation */}
+        <nav className="sidebar-nav">
+          {menuItems.map((item) => {
+            const Icon = item.icon;
+            const isActive = activeTab === item.id;
+            return (
+              <button
+                key={item.id}
+                className={`nav-item ${isActive ? 'active' : ''}`}
+                onClick={() => {
+                  setActiveTab(item.id);
+                  if (onClose) onClose();
+                }}
+              >
+                <Icon size={18} />
+                <span>{item.label}</span>
+              </button>
+            );
+          })}
+
+          <div style={{ margin: '14px 0', borderTop: '1px solid var(--border-color)' }}></div>
+
+          {/* Link to public website */}
+          <a
+            href="http://localhost:3000"
+            target="_blank"
+            rel="noreferrer"
+            className="nav-item"
+            style={{ textDecoration: 'none', color: '#38bdf8' }}
+            onClick={() => {
+              if (onClose) onClose();
+            }}
+          >
+            <ExternalLink size={18} />
+            <span>Open Live Website</span>
+          </a>
+        </nav>
+
+        {/* Profile & Logout */}
+        <div className="sidebar-footer">
+          <div className="admin-profile-pill">
+            <div className="profile-avatar">
+              {admin?.name ? admin.name.charAt(0).toUpperCase() : 'A'}
+            </div>
+            <div className="profile-info">
+              <div className="profile-name">{admin?.name || 'Commandant Admin'}</div>
+              <div className="profile-role">{admin?.email || 'admin@ndassb.academy'}</div>
+            </div>
+            <button
+              onClick={() => {
+                if (onClose) onClose();
+                onLogout();
+              }}
+              title="Sign Out"
+              style={{
+                background: 'transparent',
+                border: 'none',
+                color: '#ef4444',
+                cursor: 'pointer',
+                padding: '6px',
+                borderRadius: '6px',
+                display: 'flex',
+                alignItems: 'center'
+              }}
+            >
+              <LogOut size={18} />
+            </button>
+          </div>
+        </div>
+      </aside>
+    </>
   );
 }
