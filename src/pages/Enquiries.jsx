@@ -119,8 +119,8 @@ export default function Enquiries() {
           <thead>
             <tr>
               <th>Candidate</th>
-              <th>Target Course</th>
-              <th>City / Location</th>
+              <th>Course / Source</th>
+              <th>Remarks / Message</th>
               <th>Status</th>
               <th>Date</th>
               <th>Actions</th>
@@ -156,16 +156,17 @@ export default function Enquiries() {
                   </td>
                   <td>
                     <span style={{ fontSize: '13px', fontWeight: '600', color: '#cbd5e1' }}>
-                      {enq.courseInterested}
+                      {enq.courseInterested || 'General Enquiry'}
                     </span>
-                    {enq.qualification && (
-                      <div style={{ fontSize: '11px', color: '#64748b' }}>
-                        Edu: {enq.qualification}
-                      </div>
-                    )}
                   </td>
-                  <td style={{ fontSize: '13px', color: '#94a3b8' }}>
-                    {enq.city || 'Not specified'}
+                  <td style={{ fontSize: '13px', color: '#94a3b8', maxWidth: '240px' }}>
+                    {enq.message ? (
+                      <span style={{ display: 'inline-block', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '230px', color: '#e2e8f0' }} title={enq.message}>
+                        "{enq.message}"
+                      </span>
+                    ) : (
+                      <span style={{ color: '#64748b', fontStyle: 'italic' }}>No remarks</span>
+                    )}
                   </td>
                   <td>
                     <span className={`pill pill-${(enq.status || 'pending').toLowerCase()}`}>

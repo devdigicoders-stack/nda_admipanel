@@ -566,7 +566,7 @@ input:focus, select:focus, textarea:focus {
   border-radius: 14px;
   width: 100%;
   max-width: 680px;
-  max-height: 92vh;
+  max-height: 90vh;
   display: flex;
   flex-direction: column;
   box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
@@ -593,7 +593,7 @@ input:focus, select:focus, textarea:focus {
 .modal-form {
   display: flex;
   flex-direction: column;
-  flex: 1;
+  flex: 1 1 auto;
   min-height: 0;
   overflow: hidden;
 }
@@ -611,7 +611,26 @@ input:focus, select:focus, textarea:focus {
 .modal-body {
   padding: 22px 26px;
   overflow-y: auto;
-  flex: 1;
+  flex: 1 1 auto;
+  min-height: 0;
+  max-height: calc(90vh - 140px);
+}
+
+.modal-body::-webkit-scrollbar {
+  width: 6px;
+}
+
+.modal-body::-webkit-scrollbar-track {
+  background: rgba(15, 23, 42, 0.6);
+}
+
+.modal-body::-webkit-scrollbar-thumb {
+  background: #334155;
+  border-radius: 4px;
+}
+
+.modal-body::-webkit-scrollbar-thumb:hover {
+  background: #eab308;
 }
 
 .modal-footer {

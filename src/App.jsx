@@ -11,13 +11,41 @@ import Blogs from './pages/Blogs';
 import Gallery from './pages/Gallery';
 import Contacts from './pages/Contacts';
 
+const VALID_TABS = ['dashboard', 'courses', 'enquiries', 'contacts', 'notices', 'blogs', 'gallery'];
+
+const getTabFromUrl = () => {
+  // Check hash first: #/courses or #courses
+  if (window.location.hash) {
+    const hashClean = window.location.hash.replace(/^#\/?/, '').toLowerCase();
+    if (VALID_TABS.includes(hashClean)) return hashClean;
+  }
+  // Check pathname: /courses
+  const pathClean = window.location.pathname.replace(/^\//, '').toLowerCase();
+  if (VALID_TABS.includes(pathClean)) return pathClean;
+
+  return 'dashboard';
+};
+
 export default function App() {
   const [admin, setAdmin] = useState(null);
-  const [activeTab, setActiveTab] = useState('dashboard');
+  const [activeTab, setActiveTab] = useState(getTabFromUrl);
   const [checkingAuth, setCheckingAuth] = useState(true);
   const [isMongoConnected, setIsMongoConnected] = useState(false);
   const [refreshKey, setRefreshKey] = useState(0);
   const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  // Sync state when browser Back / Forward buttons are clicked
+  useEffect(() => {
+    const handlePopState = () => {
+      setActiveTab(getTabFromUrl());
+    };
+    window.addEventListener('popstate', handlePopState);
+    window.addEventListener('hashchange', handlePopState);
+    return () => {
+      window.removeEventListener('popstate', handlePopState);
+      window.removeEventListener('hashchange', handlePopState);
+    };
+  }, []);
 
   useEffect(() => {
     const token = api.getToken();
@@ -63,6 +91,8 @@ export default function App() {
   const handleSelectTab = (tab) => {
     setActiveTab(tab);
     setSidebarOpen(false);
+    // Update browser URL hash so URL reflects current page (e.g. #/courses, #/blogs)
+    window.location.hash = `#/${tab}`;
   };
 
   if (checkingAuth) {

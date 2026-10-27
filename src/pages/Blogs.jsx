@@ -19,7 +19,9 @@ import {
   Link2,
   Copy,
   RefreshCw,
-  X
+  X,
+  Share2,
+  ExternalLink
 } from 'lucide-react';
 import { Editor } from '@tinymce/tinymce-react';
 import { api } from '../api';
@@ -41,6 +43,7 @@ export default function Blogs() {
   const [loading, setLoading] = useState(true);
   const [viewMode, setViewMode] = useState('list'); // 'list' | 'editor'
   const [editingBlog, setEditingBlog] = useState(null);
+  const [previewBlog, setPreviewBlog] = useState(null);
   const [saving, setSaving] = useState(false);
   const [tagInput, setTagInput] = useState('');
   const [copiedLink, setCopiedLink] = useState(false);
@@ -133,8 +136,15 @@ export default function Blogs() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  const openViewPage = (blog) => {
+    setPreviewBlog(blog);
+    setViewMode('view');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   const handleBackToList = () => {
     setViewMode('list');
+    setPreviewBlog(null);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -255,7 +265,240 @@ export default function Blogs() {
   };
 
   // ==========================================
-  // VIEW 1: FULL-PAGE BLOG EDITOR
+  // VIEW 1: FULL-PAGE ARTICLE PREVIEW
+  // ==========================================
+  if (viewMode === 'view' && previewBlog) {
+    return (
+      <div style={{ paddingBottom: '60px', maxWidth: '1000px', margin: '0 auto' }}>
+        {/* Top Sticky Action Bar */}
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          flexWrap: 'wrap',
+          gap: '16px',
+          paddingBottom: '20px',
+          marginBottom: '24px',
+          borderBottom: '1px solid var(--border-color)'
+        }}>
+          <button
+            type="button"
+            className="btn btn-secondary"
+            onClick={handleBackToList}
+            style={{ display: 'flex', alignItems: 'center', gap: '8px' }}
+          >
+            <ArrowLeft size={16} />
+            <span>Back to All Articles</span>
+          </button>
+
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <button
+              type="button"
+              className="btn btn-secondary"
+              onClick={() => {
+                const fullUrl = `http://localhost:3000/blogs/${previewBlog.slug || previewBlog._id}`;
+                navigator.clipboard.writeText(fullUrl);
+                alert('Website link copied: ' + fullUrl);
+              }}
+              title="Copy Website Link"
+            >
+              <Link2 size={15} />
+              <span>Copy Link</span>
+            </button>
+            <button
+              type="button"
+              className="btn btn-primary"
+              onClick={() => openEditPage(previewBlog)}
+              style={{ display: 'flex', alignItems: 'center', gap: '8px' }}
+            >
+              <Edit2 size={16} />
+              <span>Edit Article</span>
+            </button>
+          </div>
+        </div>
+
+        {/* Article Full Preview Container */}
+        <article style={{
+          background: '#161f30',
+          border: '1px solid var(--border-color)',
+          borderRadius: '16px',
+          padding: '36px',
+          boxShadow: '0 10px 30px rgba(0,0,0,0.3)'
+        }}>
+          {/* Badge & Meta */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap', marginBottom: '18px' }}>
+            <span style={{
+              padding: '6px 14px',
+              borderRadius: '6px',
+              fontSize: '12px',
+              fontWeight: '800',
+              backgroundColor: 'rgba(56, 189, 248, 0.15)',
+              color: '#38bdf8',
+              border: '1px solid rgba(56, 189, 248, 0.3)'
+            }}>
+              {previewBlog.category}
+            </span>
+            <span style={{ fontSize: '13px', color: '#94a3b8' }}>
+              ⏱ {previewBlog.readTime || '5 min read'}
+            </span>
+            <span style={{ fontSize: '13px', color: '#64748b' }}>&bull;</span>
+            <span style={{ fontSize: '13px', color: '#94a3b8' }}>
+              📅 {new Date(previewBlog.createdAt || Date.now()).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}
+            </span>
+          </div>
+
+          {/* Title */}
+          <h1 style={{
+            fontSize: '32px',
+            fontWeight: '900',
+            color: '#ffffff',
+            lineHeight: '1.3',
+            marginBottom: '20px'
+          }}>
+            {previewBlog.title}
+          </h1>
+
+          {/* Author & Stats banner */}
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            flexWrap: 'wrap',
+            gap: '14px',
+            padding: '14px 20px',
+            backgroundColor: '#0f172a',
+            borderRadius: '10px',
+            border: '1px solid var(--border-color)',
+            marginBottom: '28px'
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <div style={{
+                width: '40px',
+                height: '40px',
+                borderRadius: '50%',
+                backgroundColor: 'rgba(234, 179, 8, 0.15)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                color: '#eab308'
+              }}>
+                <ShieldCheck size={22} />
+              </div>
+              <div>
+                <div style={{ color: '#f8fafc', fontWeight: '800', fontSize: '14px' }}>
+                  {previewBlog.author?.name || 'Academy Mentor'}
+                </div>
+                <div style={{ color: '#94a3b8', fontSize: '12px' }}>
+                  {previewBlog.author?.designation || 'Defence Faculty'}
+                </div>
+              </div>
+            </div>
+
+            <div style={{ display: 'flex', alignItems: 'center', gap: '18px', color: '#38bdf8', fontWeight: '700', fontSize: '13px' }}>
+              <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }} title="Total Views">
+                <Eye size={16} />
+                <span>{previewBlog.views || 0} Total Views</span>
+              </span>
+              <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }} title="Total Shares">
+                <Share2 size={16} />
+                <span>{previewBlog.shares || 0} Shares</span>
+              </span>
+            </div>
+          </div>
+
+          {/* Uncropped Cover Image */}
+          {previewBlog.coverImage && (
+            <div style={{
+              width: '100%',
+              borderRadius: '12px',
+              overflow: 'hidden',
+              backgroundColor: '#0b0f17',
+              marginBottom: '32px',
+              border: '1px solid var(--border-color)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              padding: '12px'
+            }}>
+              <img
+                src={previewBlog.coverImage}
+                alt={previewBlog.title}
+                style={{
+                  width: '100%',
+                  maxHeight: '520px',
+                  objectFit: 'contain',
+                  borderRadius: '8px'
+                }}
+              />
+            </div>
+          )}
+
+          {/* Executive Summary */}
+          {previewBlog.summary && (
+            <div style={{
+              padding: '20px 24px',
+              backgroundColor: 'rgba(56, 189, 248, 0.08)',
+              borderLeft: '5px solid #38bdf8',
+              borderRadius: '0 10px 10px 0',
+              fontSize: '15px',
+              color: '#e2e8f0',
+              lineHeight: '1.7',
+              marginBottom: '32px'
+            }}>
+              <strong style={{ display: 'block', color: '#38bdf8', fontSize: '12px', textTransform: 'uppercase', marginBottom: '6px', letterSpacing: '0.5px' }}>
+                Article Summary &amp; Core Takeaway
+              </strong>
+              {previewBlog.summary}
+            </div>
+          )}
+
+          {/* Content Body */}
+          <div 
+            className="blog-rendered-content"
+            style={{
+              color: '#cbd5e1',
+              fontSize: '16px',
+              lineHeight: '1.9',
+              minHeight: '200px'
+            }}
+            dangerouslySetInnerHTML={{ __html: previewBlog.content }}
+          />
+
+          {/* Tags */}
+          {previewBlog.tags && previewBlog.tags.length > 0 && (
+            <div style={{
+              display: 'flex',
+              flexWrap: 'wrap',
+              gap: '8px',
+              marginTop: '36px',
+              paddingTop: '20px',
+              borderTop: '1px solid var(--border-color)'
+            }}>
+              <span style={{ fontSize: '13px', color: '#94a3b8', alignSelf: 'center', marginRight: '6px' }}>Topics:</span>
+              {previewBlog.tags.map((t, idx) => (
+                <span
+                  key={idx}
+                  style={{
+                    fontSize: '12px',
+                    padding: '5px 12px',
+                    backgroundColor: '#1e293b',
+                    color: '#38bdf8',
+                    borderRadius: '6px',
+                    fontWeight: '700'
+                  }}
+                >
+                  #{t}
+                </span>
+              ))}
+            </div>
+          )}
+        </article>
+      </div>
+    );
+  }
+
+  // ==========================================
+  // VIEW 2: FULL-PAGE BLOG EDITOR
   // ==========================================
   if (viewMode === 'editor') {
     return (
@@ -914,15 +1157,37 @@ export default function Blogs() {
                   </div>
                 )}
 
-                <div style={{ fontSize: '12px', color: '#94a3b8', display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '14px' }}>
-                  <User size={12} color="#eab308" />
-                  <span>{b.author?.name || 'Academy Mentor'}</span>
-                  <span>&bull;</span>
-                  <span>{b.readTime || '5 min read'}</span>
+                <div style={{ fontSize: '12px', color: '#94a3b8', display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '14px', flexWrap: 'wrap', gap: '8px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                    <User size={12} color="#eab308" />
+                    <span>{b.author?.name || 'Academy Mentor'}</span>
+                    <span>&bull;</span>
+                    <span>{b.readTime || '5 min read'}</span>
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px', color: '#38bdf8', fontWeight: '600', fontSize: '11px' }}>
+                    <span style={{ display: 'flex', alignItems: 'center', gap: '3px' }} title="Total Views">
+                      <Eye size={12} />
+                      <strong>{b.views || 0}</strong>
+                    </span>
+                    <span style={{ display: 'flex', alignItems: 'center', gap: '3px' }} title="Total Shares">
+                      <Share2 size={12} />
+                      <strong>{b.shares || 0}</strong>
+                    </span>
+                  </div>
                 </div>
               </div>
 
               <div style={{ display: 'flex', gap: '8px', borderTop: '1px solid var(--border-color)', paddingTop: '14px' }}>
+                <button
+                  type="button"
+                  onClick={() => openViewPage(b)}
+                  className="btn btn-secondary btn-sm"
+                  title="View Article on New Page in Panel"
+                  style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}
+                >
+                  <Eye size={14} />
+                  <span>View</span>
+                </button>
                 <button
                   className="btn btn-secondary btn-sm"
                   style={{ flex: 1 }}
