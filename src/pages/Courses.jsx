@@ -271,7 +271,7 @@ export default function Courses() {
                     required
                     value={formData.title}
                     onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                    placeholder="e.g. SSB 14-Days Comprehensive Interview Bootcamp"
+                    placeholder="e.g. SSB 10-Days Comprehensive Interview Bootcamp"
                   />
                 </div>
 
@@ -285,6 +285,7 @@ export default function Courses() {
                       <option value="Offline Mode SSB">Offline Mode SSB (10-Day)</option>
                       <option value="Online Mode SSB">Online Mode SSB (20-Day)</option>
                       <option value="NDA & CDS Written">NDA &amp; CDS Written</option>
+                      <option value="SSB 10 Days Training">SSB 10 Days Training</option>
                       <option value="NDA Written">NDA Written (Legacy)</option>
                       <option value="SSB 14 Days Training">SSB 14 Days Training (Legacy)</option>
                       <option value="CDS / AFCAT">CDS / AFCAT</option>
