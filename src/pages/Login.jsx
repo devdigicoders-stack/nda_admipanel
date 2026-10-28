@@ -62,7 +62,7 @@ export default function Login({ onLoginSuccess }) {
           }}>
             <img
               src="/logo.png"
-              alt="Shaurya Defence Academy"
+              alt="ASTRA SSB"
               style={{ height: '70px', width: 'auto', objectFit: 'contain', display: 'block' }}
             />
           </div>
@@ -70,7 +70,7 @@ export default function Login({ onLoginSuccess }) {
             Command Control Portal
           </h1>
           <p style={{ fontSize: '13px', color: '#94a3b8', marginTop: '6px' }}>
-            Shaurya NDA & SSB Academy Administration
+            ASTRA SSB Academy Administration
           </p>
         </div>
 

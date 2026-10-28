@@ -58,12 +58,12 @@ export default function Sidebar({
             }}>
               <img
                 src="/logo.png"
-                alt="Shaurya Defence"
+                alt="ASTRA SSB"
                 style={{ height: '36px', width: 'auto', objectFit: 'contain' }}
               />
             </div>
             <div className="brand-text">
-              <h2>SHAURYA DEFENCE</h2>
+              <h2>ASTRA SSB</h2>
               <span>Admin Command</span>
             </div>
           </div>
