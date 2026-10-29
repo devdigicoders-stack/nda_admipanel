@@ -10,8 +10,9 @@ import Notices from './pages/Notices';
 import Blogs from './pages/Blogs';
 import Gallery from './pages/Gallery';
 import Contacts from './pages/Contacts';
+import Candidates from './pages/Candidates';
 
-const VALID_TABS = ['dashboard', 'courses', 'enquiries', 'contacts', 'notices', 'blogs', 'gallery'];
+const VALID_TABS = ['dashboard', 'candidates', 'courses', 'enquiries', 'contacts', 'notices', 'blogs', 'gallery'];
 
 const getTabFromUrl = () => {
   // Check hash first: #/courses or #courses
@@ -109,6 +110,7 @@ export default function App() {
 
   const titles = {
     dashboard: { title: 'Command Operations Dashboard', subtitle: 'Overview of student admissions, active courses, and academy alerts' },
+    candidates: { title: 'Our Selected Cadets', subtitle: 'Add and manage recommended candidates with photo, entry, board, and AIR ranking' },
     courses: { title: 'NDA & SSB Course Management', subtitle: 'Configure course fee structures, durations, batch dates, and syllabus' },
     enquiries: { title: 'Student Admission Enquiries & Leads', subtitle: 'Track and follow up with student leads from website registration forms' },
     contacts: { title: 'Contact Us Messages & Inquiries', subtitle: 'Manage direct questions, general enquiries, and messages from the website contact page' },
@@ -139,6 +141,7 @@ export default function App() {
 
         <main className="admin-content" key={refreshKey}>
           {activeTab === 'dashboard' && <Dashboard setActiveTab={handleSelectTab} />}
+          {activeTab === 'candidates' && <Candidates />}
           {activeTab === 'courses' && <Courses />}
           {activeTab === 'enquiries' && <Enquiries />}
           {activeTab === 'contacts' && <Contacts />}

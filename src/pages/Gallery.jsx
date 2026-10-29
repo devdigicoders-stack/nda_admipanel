@@ -11,7 +11,7 @@ export default function Gallery() {
 
   const [formData, setFormData] = useState({
     title: '',
-    category: 'GTO Obstacle Ground',
+    category: '',
     imageUrl: '',
     caption: '',
     featured: true
@@ -19,13 +19,10 @@ export default function Gallery() {
 
   const [previewPhoto, setPreviewPhoto] = useState(null);
 
-  const categories = [
+  // Dynamic list of categories from uploaded items plus suggestions
+  const dynamicCategories = [
     'All',
-    'GTO Obstacle Ground',
-    'SSB Mock Interview',
-    'Smart Classrooms',
-    'Recommended Cadets',
-    'Physical Training & Drill'
+    ...Array.from(new Set(items.map(i => i.category).filter(Boolean)))
   ];
 
   const fetchGallery = async () => {
@@ -48,12 +45,16 @@ export default function Gallery() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!formData.category.trim()) {
+      alert('Please enter a category name');
+      return;
+    }
     try {
       await api.createGalleryItem(formData);
       setModalOpen(false);
       setFormData({
         title: '',
-        category: 'GTO Obstacle Ground',
+        category: '',
         imageUrl: '',
         caption: '',
         featured: true
@@ -94,7 +95,7 @@ export default function Gallery() {
 
       {/* Category filter tabs */}
       <div className="filter-tabs">
-        {categories.map((cat) => (
+        {dynamicCategories.map((cat) => (
           <button
             key={cat}
             className={`filter-tab ${selectedCategory === cat ? 'active' : ''}`}
@@ -294,16 +295,13 @@ export default function Gallery() {
 
                 <div className="form-group">
                   <label>Category *</label>
-                  <select
+                  <input
+                    type="text"
+                    required
                     value={formData.category}
                     onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                  >
-                    <option value="GTO Obstacle Ground">GTO Obstacle Ground</option>
-                    <option value="SSB Mock Interview">SSB Mock Interview</option>
-                    <option value="Smart Classrooms">Smart Classrooms</option>
-                    <option value="Recommended Cadets">Recommended Cadets</option>
-                    <option value="Physical Training & Drill">Physical Training & Drill</option>
-                  </select>
+                    placeholder="Enter category name (e.g. Smart Classrooms, GTO Obstacle Ground)"
+                  />
                 </div>
 
                 <ImageUploadInput

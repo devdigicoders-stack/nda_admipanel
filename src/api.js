@@ -162,6 +162,20 @@ export const api = {
     return this.request(`/gallery/${id}`, { method: 'DELETE' });
   },
 
+  // Candidates / Selections
+  getCandidates() {
+    return this.request('/candidates');
+  },
+  createCandidate(cadet) {
+    return this.request('/candidates', { method: 'POST', body: cadet });
+  },
+  updateCandidate(id, cadet) {
+    return this.request(`/candidates/${id}`, { method: 'PUT', body: cadet });
+  },
+  deleteCandidate(id) {
+    return this.request(`/candidates/${id}`, { method: 'DELETE' });
+  },
+
   // File Upload (Local file to server: Images or PDFs)
   async uploadFile(file) {
     const formData = new FormData();

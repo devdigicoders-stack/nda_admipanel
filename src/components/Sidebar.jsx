@@ -7,6 +7,7 @@ import {
   Bell, 
   BookOpen, 
   Image as ImageIcon, 
+  Award,
   LogOut, 
   ExternalLink,
   Database,
@@ -24,6 +25,7 @@ export default function Sidebar({
 }) {
   const menuItems = [
     { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
+    { id: 'candidates', label: 'Selected Cadets', icon: Award },
     { id: 'courses', label: 'NDA & SSB Courses', icon: GraduationCap },
     { id: 'enquiries', label: 'Enquiries & Leads', icon: Users },
     { id: 'contacts', label: 'Contact Us Messages', icon: MessageSquare },
